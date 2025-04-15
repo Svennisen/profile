@@ -1,0 +1,9 @@
+[build]
+command = "pnpm build"
+output_directory = "dist"
+
+[build.environment]
+NODE_VERSION = "18"
+
+[site]
+bucket = "dist" 
