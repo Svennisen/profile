@@ -8,26 +8,26 @@ import { initializePointBuffers, updatePoints } from '../utils/pointBufferUtils'
 import {
   generateInitialPositions,
   generateInitialColors,
-  animatePoints,
+  generateInitialSizes,
 } from '../utils/animationUtils';
 import { mouseToNDC } from '../utils/pointUtils';
 
 export function Portrait({ imageUrl }) {
   const pointsRef = useRef();
-  const isCompleted = useRef(false);
+  const isAnimating = useRef(false);
+  const hasLoadedImagePoints = useRef(false);
+  const animationStartTime = useRef(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const { points, isLoading } = usePointCloudFromImage(imageUrl);
-  const [animationStartTime, setAnimationStartTime] = useState(null);
-  const [isAnimating, setIsAnimating] = useState(false);
   const { clock } = useThree();
 
   // Create typed arrays for Three.js buffer attributes
   const positions = useMemo(() => new Float32Array(POINT_COUNT * 3), [POINT_COUNT]);
   const colors = useMemo(() => new Float32Array(POINT_COUNT * 3), [POINT_COUNT]);
   const sizes = useMemo(() => new Float32Array(POINT_COUNT), [POINT_COUNT]);
-  const finalPositions = useMemo(() => new Float32Array(POINT_COUNT * 3), [POINT_COUNT]);
-  const finalColors = useMemo(() => new Float32Array(POINT_COUNT * 3), [POINT_COUNT]);
-  const finalSizes = useMemo(() => new Float32Array(POINT_COUNT), [POINT_COUNT]);
+  const originalPositions = useMemo(() => new Float32Array(POINT_COUNT * 3), [POINT_COUNT]);
+  const originalColors = useMemo(() => new Float32Array(POINT_COUNT * 3), [POINT_COUNT]);
+  const originalSizes = useMemo(() => new Float32Array(POINT_COUNT), [POINT_COUNT]);
 
   // Pre-calculate random directions for consistent scatter behavior
   const randomDirections = useMemo(() => {
@@ -40,10 +40,12 @@ export function Portrait({ imageUrl }) {
   useEffect(() => {
     const initialPositions = generateInitialPositions(POINT_COUNT);
     const initialColors = generateInitialColors(POINT_COUNT);
+    const initialSizes = generateInitialSizes(POINT_COUNT);
 
     // Initialize with random positions and colors
     positions.set(initialPositions);
     colors.set(initialColors);
+    sizes.set(initialSizes);
 
     // Track mouse position relative to canvas
     const handleMouseMove = event => {
@@ -61,33 +63,50 @@ export function Portrait({ imageUrl }) {
 
   // Update with sampled points when loaded
   useEffect(() => {
-    if (points.length > 0 && !isCompleted.current && !isAnimating) {
-      // Store the sampled positions and colors
-      initializePointBuffers(points, finalPositions, finalColors, finalSizes);
-      setAnimationStartTime(clock.elapsedTime); // Set to current clock time
-      setIsAnimating(true);
+    if (points.length > 0 && !isAnimating.current && !hasLoadedImagePoints.current) {
+      initializePointBuffers(points, originalPositions, originalColors, originalSizes);
+      hasLoadedImagePoints.current = true;
+      isAnimating.current = true;
+      animationStartTime.current = clock.elapsedTime;
     }
-  }, [points, isAnimating, isCompleted, clock]);
+  }, [points, isAnimating, clock]);
+
+  const easeOutCubic = (x) => 1 - Math.pow(1 - x, 3);
+  const calculateAnimationProgress = (elapsedTime, duration) => Math.min(elapsedTime / duration, 1);
 
   // Animation loop
   useFrame(state => {
     if (pointsRef.current) {
-      if (isAnimating) {
-        const elapsedTime = state.clock.elapsedTime - animationStartTime;
-        isCompleted.current = animatePoints(
+      if (isAnimating.current) {
+        const duration = 2.5;
+        const elapsedTime = state.clock.elapsedTime - animationStartTime.current;
+        const progress = easeOutCubic(calculateAnimationProgress(elapsedTime, duration));
+
+        updatePoints(
           pointsRef,
-          finalPositions,
-          finalColors,
-          finalSizes,
-          elapsedTime,
-          5 // 5 second duration
+          mousePosition,
+          randomDirections,
+          state.clock.elapsedTime,
+          originalPositions,
+          originalColors,
+          originalSizes,
+          progress
         );
 
-        if (isCompleted.current) {
-          setIsAnimating(false);
+        if (progress >= 1) {
+          isAnimating.current = false;
         }
-      } else if (isCompleted.current) {
-        updatePoints(pointsRef, points, mousePosition, randomDirections, state.clock.elapsedTime);
+      } else if (hasLoadedImagePoints.current) {
+        updatePoints(
+          pointsRef,
+          mousePosition,
+          randomDirections,
+          state.clock.elapsedTime,
+          originalPositions,
+          originalColors,
+          originalSizes,
+          1
+        );
       }
     }
   });

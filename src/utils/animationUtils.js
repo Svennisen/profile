@@ -23,11 +23,24 @@ export const generateInitialPositions = count => {
 export const generateInitialColors = count => {
   const colors = new Float32Array(count * 3);
   for (let i = 0; i < count; i++) {
-    colors[i * 3] = Math.random() * 0.5 + 0.5; // R
-    colors[i * 3 + 1] = Math.random() * 0.5 + 0.5; // G
-    colors[i * 3 + 2] = Math.random() * 0.5 + 0.5; // B
+    let gray = Math.random(); // Single grayscale value
+    if (Math.random() < 0.3) {
+      gray = gray / 2;
+    }
+    colors[i * 3] = gray;      // Same gray value for all channels
+    colors[i * 3 + 1] = gray;
+    colors[i * 3 + 2] = gray;
   }
   return colors;
+};
+
+// Generate initial sizes for all points
+export const generateInitialSizes = count => {
+  const sizes = new Float32Array(count);
+  for (let i = 0; i < count; i++) {
+    sizes[i] = Math.random() * 0.01 + 0.01;
+  }
+  return sizes;
 };
 
 // Calculate progress of animation (0 to 1)
