@@ -19,7 +19,7 @@ export function Portrait({ imageUrl }) {
   const animationStartTime = useRef(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const { points, isLoading } = usePointCloudFromImage(imageUrl);
-  const { clock } = useThree();
+  const { clock, size, camera } = useThree();
 
   // Create typed arrays for Three.js buffer attributes
   const positions = useMemo(() => new Float32Array(POINT_COUNT * 3), [POINT_COUNT]);
@@ -59,7 +59,7 @@ export function Portrait({ imageUrl }) {
       canvas.addEventListener('mousemove', handleMouseMove);
       return () => canvas.removeEventListener('mousemove', handleMouseMove);
     }
-  }, []);
+  }, [size]);
 
   // Update with sampled points when loaded
   useEffect(() => {
@@ -70,6 +70,18 @@ export function Portrait({ imageUrl }) {
       animationStartTime.current = clock.elapsedTime;
     }
   }, [points, isAnimating, clock]);
+
+  // Update camera on resize
+  useEffect(() => {
+    if (camera) {
+      // Update orthographic camera bounds
+      camera.left = -size.width / size.height;
+      camera.right = size.width / size.height;
+      camera.top = 1;
+      camera.bottom = -1;
+      camera.updateProjectionMatrix();
+    }
+  }, [size, camera]);
 
   const easeOutCubic = (x) => 1 - Math.pow(1 - x, 3);
   const calculateAnimationProgress = (elapsedTime, duration) => Math.min(elapsedTime / duration, 1);

@@ -1,17 +1,20 @@
-import { Canvas } from '@react-three/fiber';
+import { Canvas, useThree } from '@react-three/fiber';
 import { OrbitControls, OrthographicCamera } from '@react-three/drei';
 import { motion } from 'framer-motion';
 import { Portrait } from './components/Portrait';
 import { POINT_COUNT } from './hooks/usePointCloud';
 
 function Scene() {
+  const { size } = useThree();
+  const aspect = size.width / size.height;
+
   return (
     <>
       <OrthographicCamera
         makeDefault
         position={[0, 0, 2.5]}
-        left={-1}
-        right={1}
+        left={-aspect}
+        right={aspect}
         top={1}
         bottom={-1}
         near={0.1}

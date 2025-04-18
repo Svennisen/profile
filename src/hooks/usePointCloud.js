@@ -29,27 +29,26 @@ export function usePointCloudFromImage(imageUrl) {
 
       // Sample image data to create points
       for (let i = 0; i < POINT_COUNT; i++) {
-        // Random position within image bounds
-        const x = Math.random(); // 0 to 1 (right half)
-        const y = Math.random(); // 0 to 1 (top to bottom)
+        // Random position in image space [0,1]
+        const img_x = Math.random();
+        const img_y = Math.random();
 
-        // Map to image coordinates for sampling
-        const imgX = Math.floor(x * img.width);
-        const imgY = Math.floor(y * img.height);
+        // Convert to pixel coordinates
+        const px_imgX = Math.floor(img_x * img.width);
+        const px_imgY = Math.floor(img_y * img.height);
 
-        // Get grayscale value from image (for B&W images, R=G=B)
-        const idx = (imgY * canvas.width + imgX) * 4;
-        const gray = data[idx] / 255; // Use red channel as grayscale value
-        const a = data[idx + 3] / 255;
+        // Get pixel data index
+        const px_idx = (px_imgY * canvas.width + px_imgX) * 4;
+        const img_gray = data[px_idx] / 255;  // Normalized [0,1]
+        const img_alpha = data[px_idx + 3] / 255;  // Normalized [0,1]
 
-        // Only add points with sufficient opacity
-        if (a > 0.1) {
+        if (img_alpha > 0.1) {
           newPoints.push({
-            position: [x, y, 0],
-            color: [gray, gray, gray],
-            originalPosition: [x, y, 0],
+            position: [img_x, img_y, 0],        // Image space [0,1]
+            color: [img_gray, img_gray, img_gray], // Image space [0,1]
+            originalPosition: [img_x, img_y, 0], // Image space [0,1]
             velocity: [0, 0, 0],
-            size: Math.random() * 3 + 1,
+            size: Math.random() * 3 + 1,        // Arbitrary units
           });
         }
       }

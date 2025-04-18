@@ -1,37 +1,30 @@
 /**
- * Transforms a point from image coordinates to NDC (Normalized Device Coordinates)
- * @param {number} x - X coordinate in image space (0-1)
- * @param {number} y - Y coordinate in image space (0-1)
- * @returns {Object} Transformed coordinates in NDC space
+ * Transforms a point from image coordinates to NDC
  */
-export const toNDC = (x, y) => {
+export const toNDC = (img_x, img_y) => {
   return {
-    x: x * 2 - 1,
-    y: -(y * 2 - 1), // Flip Y
+    x: img_x * 2 - 1,     // Image [0,1] -> NDC [-1,1]
+    y: -(img_y * 2 - 1),  // Image [0,1] -> NDC [-1,1] with Y-flip
   };
 };
 
 /**
  * Transforms a point from NDC to image coordinates
- * @param {number} x - X coordinate in NDC space (-1 to 1)
- * @param {number} y - Y coordinate in NDC space (-1 to 1)
- * @returns {Object} Transformed coordinates in image space
  */
-export const fromNDC = (x, y) => {
+export const fromNDC = (ndc_x, ndc_y) => {
   return {
-    x: (x + 1) / 2,
-    y: (-y + 1) / 2, // Flip Y
+    x: (ndc_x + 1) / 2,    // NDC [-1,1] -> Image [0,1]
+    y: (-ndc_y + 1) / 2,   // NDC [-1,1] -> Image [0,1] with Y-flip
   };
 };
 
 /**
- * Generates a random position within viewport bounds
- * @returns {Object} Random position in NDC space
+ * Generates a random position in NDC space
  */
 export const generateRandomPosition = () => {
   return {
-    x: Math.random() * 2 - 1, // -1 to 1
-    y: Math.random() * 2 - 1, // -1 to 1
+    x: Math.random() * 4 - 2, // NDC space [-2,2] (extended range)
+    y: Math.random() * 4 - 2, // NDC space [-2,2] (extended range)
     z: 0,
   };
 };
@@ -52,42 +45,31 @@ export const interpolatePosition = (start, end, progress) => {
 };
 
 /**
- * Updates a point's position in the buffer
- * @param {Float32Array} positions - Position buffer array
- * @param {number} idx - Index of the point in the buffer
- * @param {Object} position - New position
+ * Updates a point's position in the buffer (NDC space)
  */
-export const updatePointPosition = (positions, idx, position) => {
-  positions[idx] = position.x;
-  positions[idx + 1] = position.y;
-  positions[idx + 2] = position.z;
+export const updatePointPosition = (ndc_positions, idx, ndc_position) => {
+  ndc_positions[idx] = ndc_position.x;
+  ndc_positions[idx + 1] = ndc_position.y;
+  ndc_positions[idx + 2] = ndc_position.z;
 };
 
 /**
- * Gets a point's position from the buffer
- * @param {Float32Array} positions - Position buffer array
- * @param {number} idx - Index of the point in the buffer
- * @returns {Object} Point position
+ * Gets a point's position from the buffer (NDC space)
  */
-export const getPointPosition = (positions, idx) => {
+export const getPointPosition = (ndc_positions, idx) => {
   return {
-    x: positions[idx],
-    y: positions[idx + 1],
-    z: positions[idx + 2],
+    x: ndc_positions[idx],
+    y: ndc_positions[idx + 1],
+    z: ndc_positions[idx + 2],
   };
 };
 
 /**
  * Converts mouse coordinates to NDC space
- * @param {number} clientX - Mouse X coordinate
- * @param {number} clientY - Mouse Y coordinate
- * @param {number} width - Canvas width
- * @param {number} height - Canvas height
- * @returns {Object} Mouse position in NDC space
  */
-export const mouseToNDC = (clientX, clientY, width, height) => {
+export const mouseToNDC = (px_clientX, px_clientY, px_width, px_height) => {
   return {
-    x: (clientX / width) * 2 - 1,
-    y: 1 - (clientY / height) * 2,
+    x: (px_clientX / px_width) * 2 - 1,   // Pixel -> NDC [-1,1]
+    y: 1 - (px_clientY / px_height) * 2,  // Pixel -> NDC [-1,1] with Y-flip
   };
 };
