@@ -68,8 +68,9 @@ export const getPointPosition = (ndc_positions, idx) => {
  * Converts mouse coordinates to NDC space
  */
 export const mouseToNDC = (px_clientX, px_clientY, px_width, px_height) => {
+  const aspect = px_width / px_height;
   return {
-    x: (px_clientX / px_width) * 2 - 1,   // Pixel -> NDC [-1,1]
-    y: 1 - (px_clientY / px_height) * 2,  // Pixel -> NDC [-1,1] with Y-flip
+    x: ((px_clientX / px_width) * 2 - 1) * aspect,   // Scale x by aspect ratio
+    y: 1 - (px_clientY / px_height) * 2,             // Y remains the same
   };
 };

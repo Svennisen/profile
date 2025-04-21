@@ -51,7 +51,7 @@ export const updatePoints = (
   ndc_mousePosition,  // NDC space [-1,1]
   randomDirections,   // Unit vectors
   elapsedTime,
-  img_originalPositions,  // Image space [0,1]
+  originalPositions_NDC,  // NDC space
   img_originalColors,     // Image space [0,1]
   img_originalSizes,      // Arbitrary units
   progress = 1
@@ -60,20 +60,17 @@ export const updatePoints = (
   const sizes = pointsRef.current.geometry.attributes.size.array;
   const colors = pointsRef.current.geometry.attributes.color.array;
 
-  for (let i = 0; i < img_originalPositions.length / 3; i++) {
+  for (let i = 0; i < originalPositions_NDC.length / 3; i++) {
     const idx = i * 3;
     const sizeIdx = i;
 
     // Get current position from buffer (in NDC space)
     const ndc_currentPos = getPointPosition(ndc_positions, idx);
 
-    // CONVERSION: Image [0,1] -> NDC [-1,1] -> Image [0,1] (This might be wrong!)
-    const img_finalSpace = fromNDC(img_originalPositions[idx], img_originalPositions[idx + 1]);
-
     // Calculate next position
     const ndc_nextPos = calculateNextPosition(
       i,
-      [img_finalSpace.x, img_finalSpace.y, img_originalPositions[idx + 2]],
+      [originalPositions_NDC[idx], originalPositions_NDC[idx + 1], originalPositions_NDC[idx + 2]],
       ndc_mousePosition,
       randomDirections[i],
       ndc_currentPos,
@@ -86,7 +83,7 @@ export const updatePoints = (
 
     // Calculate mouse effect using NDC positions
     const mouseEffect = calculateMouseEffect(
-      [ndc_nextPos.x, ndc_nextPos.y, img_originalPositions[idx + 2]],
+      [ndc_nextPos.x, ndc_nextPos.y, originalPositions_NDC[idx + 2]],
       ndc_mousePosition,
       randomDirections[i]
     );

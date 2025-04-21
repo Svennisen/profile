@@ -22,7 +22,6 @@ function Scene() {
       />
       <ambientLight intensity={0.5} />
       <Portrait imageUrl="/portrait.png" pointCount={POINT_COUNT} />
-      <OrbitControls enableZoom={false} enablePan={false} enableRotate={false} />
     </>
   );
 }

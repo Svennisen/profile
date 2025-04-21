@@ -82,7 +82,7 @@ export const interpolatePosition = (current, target, returnSpeed = 0.03) => {
  */
 export const calculateNextPosition = (
   i,
-  img_originalPos,    // Image space [0,1]
+  originalPos_NDC,    // Image space [0,1]
   ndc_mousePosition,  // NDC space [-1,1]
   randomDirection,    // Unit vector
   ndc_currentPos,     // NDC space [-1,1]
@@ -90,23 +90,25 @@ export const calculateNextPosition = (
   progress = 1
 ) => {
   // CONVERSION: Image [0,1] -> NDC [-1,1]
-  const ndc_pos = toNDC(img_originalPos[0], img_originalPos[1]);
+  const x = originalPos_NDC[0];
+  const y = originalPos_NDC[1];
+  const z = originalPos_NDC[2];
 
   // Calculate organic movement (small NDC space offsets)
   const ndc_organicMove = calculateOrganicMovement(elapsedTime, i);
 
   // Calculate mouse effect using NDC coordinates
   const mouseEffect = calculateMouseEffect(
-    [ndc_pos.x, ndc_pos.y, img_originalPos[2]],
+    [x, y, z],
     ndc_mousePosition,
     randomDirection
   );
 
   // Calculate target position in NDC space
   const ndc_targetPos = {
-    x: ndc_pos.x + (mouseEffect.influence > 0 ? mouseEffect.offset.x : 0),
-    y: ndc_pos.y + (mouseEffect.influence > 0 ? mouseEffect.offset.y : 0),
-    z: img_originalPos[2],
+    x: x + (mouseEffect.influence > 0 ? mouseEffect.offset.x : 0),
+    y: y + (mouseEffect.influence > 0 ? mouseEffect.offset.y : 0),
+    z: z,
   };
 
   // Return interpolated position in NDC space
