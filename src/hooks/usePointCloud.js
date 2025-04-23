@@ -28,7 +28,7 @@ export function usePointCloudFromImage(imageUrl) {
       const newPoints = [];
 
       // Sample image data to create points
-      for (let i = 0; i < POINT_COUNT; i++) {
+      while (newPoints.length <= POINT_COUNT) {
         // Random position in image space [0,1]
         const img_x = Math.random();
         const img_y = Math.random();
@@ -39,13 +39,16 @@ export function usePointCloudFromImage(imageUrl) {
 
         // Get pixel data index
         const px_idx = (px_imgY * canvas.width + px_imgX) * 4;
-        const img_gray = data[px_idx] / 255;  // Normalized [0,1]
+        const img_red = data[px_idx] / 255;  // Normalized [0,1]
+        const img_green = data[px_idx + 1] / 255;  // Normalized [0,1]
+        const img_blue = data[px_idx + 2] / 255;  // Normalized [0,1]
+
         const img_alpha = data[px_idx + 3] / 255;  // Normalized [0,1]
 
         if (img_alpha > 0.1) {
           newPoints.push({
             position: [img_x, img_y, 0],        // Image space [0,1]
-            color: [img_gray, img_gray, img_gray], // Image space [0,1]
+            color: [img_red, img_green, img_blue], // RGB values in [0,1]
             originalPosition: [img_x, img_y, 0], // Image space [0,1]
             velocity: [0, 0, 0],
             size: Math.random() * 3 + 1,        // Arbitrary units

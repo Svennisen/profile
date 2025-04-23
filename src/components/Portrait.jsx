@@ -16,6 +16,8 @@ export function Portrait({ imageUrl }) {
   const pointsRef = useRef();
   const isAnimating = useRef(false);
   const hasLoadedImagePoints = useRef(false);
+  const flownOffPoints = useRef(new Map());
+
   const animationStartTime = useRef(null);
   const [mousePosition_NDC, setMousePosition_NDC] = useState({ x: 0, y: 0 });
   const { points, isLoading } = usePointCloudFromImage(imageUrl);
@@ -29,16 +31,10 @@ export function Portrait({ imageUrl }) {
   const originalColors = useMemo(() => new Float32Array(POINT_COUNT * 3), [POINT_COUNT]);
   const originalSizes = useMemo(() => new Float32Array(POINT_COUNT), [POINT_COUNT]);
 
-  // TODO: Implement color image sampling and display
-  // TODO: Implement random point flyoff
-  // TODO: Implement Indicidual point meta data array, or reuse original points object
-  // TODO: Only to mouse effect calculation once
-  // TODO Add return exclusion timer for points flying off
   // TODO Add Larger description area
   // TODO Add background or better background for text
   // TODO Add separate blog post section
   // TODO Maybe animate my name or logo or text as points as well
-
 
   // Pre-calculate random directions for consistent scatter behavior
   const randomDirections = useMemo(() => {
@@ -46,6 +42,40 @@ export function Portrait({ imageUrl }) {
       .fill(0)
       .map(() => getRandomDirection());
   }, []);
+
+  // Create handler object for point flying
+  const pointFlyingHandler = useMemo(
+    () => ({
+      isFlownOff: index => flownOffPoints.current.has(index),
+      shouldFlyBack: index => {
+        const point = flownOffPoints.current.get(index);
+
+        if (point.time + 3 < clock.elapsedTime) {
+          return true;
+        }
+        return false;
+      },
+      markPointAsFlying: (index, targetPos) => {
+        flownOffPoints.current.set(index, {
+          x: targetPos.x,
+          y: targetPos.y,
+          z: targetPos.z,
+          time: clock.elapsedTime,
+        });
+      },
+      maybeMarkReturned: (index, currentPos, originalPos) => {
+        const dx = currentPos.x - originalPos.x;
+        const dy = currentPos.y - originalPos.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        if (distance < 0.01) {
+          flownOffPoints.current.delete(index);
+          return true;
+        }
+        return false;
+      },
+    }),
+    [flownOffPoints]
+  );
 
   //On mount
   useEffect(() => {
@@ -72,7 +102,7 @@ export function Portrait({ imageUrl }) {
     };
 
     // Prevent default only on touchstart
-    const preventDefaultTouch = (e) => {
+    const preventDefaultTouch = e => {
       e.preventDefault();
     };
 
@@ -120,7 +150,7 @@ export function Portrait({ imageUrl }) {
     }
   }, [size, camera]);
 
-  const easeOutCubic = (x) => 1 - Math.pow(1 - x, 3);
+  const easeOutCubic = x => 1 - Math.pow(1 - x, 3);
   const calculateAnimationProgress = (elapsedTime, duration) => Math.min(elapsedTime / duration, 1);
 
   // Animation loop
@@ -139,7 +169,9 @@ export function Portrait({ imageUrl }) {
           originalPositions_NDC,
           originalColors,
           originalSizes,
-          progress
+          progress,
+          pointFlyingHandler,
+          flownOffPoints
         );
 
         if (progress >= 1) {
@@ -154,7 +186,9 @@ export function Portrait({ imageUrl }) {
           originalPositions_NDC,
           originalColors,
           originalSizes,
-          1
+          1,
+          pointFlyingHandler,
+          flownOffPoints
         );
       }
     }

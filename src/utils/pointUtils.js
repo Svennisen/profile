@@ -3,8 +3,8 @@
  */
 export const toNDC = (img_x, img_y) => {
   return {
-    x: img_x * 2 - 1,     // Image [0,1] -> NDC [-1,1]
-    y: -(img_y * 2 - 1),  // Image [0,1] -> NDC [-1,1] with Y-flip
+    x: img_x * 2 - 1, // Image [0,1] -> NDC [-1,1]
+    y: -(img_y * 2 - 1), // Image [0,1] -> NDC [-1,1] with Y-flip
   };
 };
 
@@ -13,18 +13,18 @@ export const toNDC = (img_x, img_y) => {
  */
 export const fromNDC = (ndc_x, ndc_y) => {
   return {
-    x: (ndc_x + 1) / 2,    // NDC [-1,1] -> Image [0,1]
-    y: (-ndc_y + 1) / 2,   // NDC [-1,1] -> Image [0,1] with Y-flip
+    x: (ndc_x + 1) / 2, // NDC [-1,1] -> Image [0,1]
+    y: (-ndc_y + 1) / 2, // NDC [-1,1] -> Image [0,1] with Y-flip
   };
 };
 
 /**
  * Generates a random position in NDC space
  */
-export const generateRandomPosition = () => {
+export const generateRandomPosition = (range = 2) => {
   return {
-    x: Math.random() * 4 - 2, // NDC space [-2,2] (extended range)
-    y: Math.random() * 4 - 2, // NDC space [-2,2] (extended range)
+    x: Math.random() * 2 * range - range, // NDC space [-2,2] (extended range)
+    y: Math.random() * 2 * range - range, // NDC space [-2,2] (extended range)
     z: 0,
   };
 };
@@ -70,7 +70,7 @@ export const getPointPosition = (ndc_positions, idx) => {
 export const mouseToNDC = (px_clientX, px_clientY, px_width, px_height) => {
   const aspect = px_width / px_height;
   return {
-    x: ((px_clientX / px_width) * 2 - 1) * aspect,   // Scale x by aspect ratio
-    y: 1 - (px_clientY / px_height) * 2,             // Y remains the same
+    x: ((px_clientX / px_width) * 2 - 1) * aspect, // Scale x by aspect ratio
+    y: 1 - (px_clientY / px_height) * 2, // Y remains the same
   };
 };

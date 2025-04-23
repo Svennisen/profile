@@ -2,8 +2,8 @@ import * as THREE from 'three';
 
 export const createCircleTexture = () => {
   const canvas = document.createElement('canvas');
-  canvas.width = 64;
-  canvas.height = 64;
+  canvas.width = 16;
+  canvas.height = 16;
 
   const context = canvas.getContext('2d');
   const centerX = canvas.width / 2;
@@ -12,9 +12,9 @@ export const createCircleTexture = () => {
 
   // Create gradient for smooth circle
   const gradient = context.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
-  gradient.addColorStop(0, 'rgba(255,255,255,1)');
-  gradient.addColorStop(0.5, 'rgba(255,255,255,0.5)');
-  gradient.addColorStop(1, 'rgba(255,255,255,0)');
+  gradient.addColorStop(0, 'rgb(255, 255, 255)');
+  gradient.addColorStop(0.9, 'rgb(179, 179, 179)');
+  gradient.addColorStop(1, 'rgb(0, 0, 0)');
 
   // Draw circle
   context.fillStyle = gradient;
