@@ -12,7 +12,7 @@
     "format": "prettier --write \"src/**/*.{js,jsx}\""
   },
   "dependencies": {
-    "@react-three/drei": "^9.97.0",
+    "@react-three/drei": "^9.99.0",
     "@react-three/fiber": "^8.15.16",
     "framer-motion": "^11.0.3",
     "react": "^18.2.0",
@@ -31,6 +31,7 @@
     "postcss": "^8.4.33",
     "prettier": "^3.5.3",
     "tailwindcss": "^3.4.1",
+    "terser": "^5.28.1",
     "vite": "^5.0.8"
   }
 }
