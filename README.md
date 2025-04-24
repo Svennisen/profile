@@ -1,59 +1,68 @@
-# Sven Elfgren - Personal Profile
+# Interactive Point Cloud Portrait
 
-A modern, interactive personal profile website built with React, Vite, Three.js, and Tailwind CSS.
+A technical exploration of interactive 3D graphics using React and Three.js, featuring a dynamic point cloud portrait that responds to user interaction.
 
-## Features
+## Technical Overview
 
-- Interactive 3D point cloud portrait effect that:
-  - Responds to mouse movement
-  - Scatters particles on hover
-  - Features organic, subtle animations
-  - Creates a dynamic, engaging experience
-- Smooth animations and transitions
-- Responsive design
-- Links to professional profiles
+This project implements a point cloud visualization system with real-time interaction that:
 
-## Technologies Used
+- Pre-processes a 2D image into thousands of 3D points (initial load)
+- Renders and animates points in real-time using Three.js
+- Implements custom physics-based animations with frame-by-frame updates
+- Handles real-time user interaction with efficient point manipulation
 
-- [React](https://reactjs.org/) - UI library
-- [Vite](https://vitejs.dev/) - Build tool and development server
-- [Three.js](https://threejs.org/) - 3D graphics library
+## Core Technologies
+
+- [React](https://reactjs.org/) - UI framework
+- [Three.js](https://threejs.org/) - 3D graphics engine
 - [React Three Fiber](https://github.com/pmndrs/react-three-fiber) - React renderer for Three.js
-- [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
-- [Framer Motion](https://www.framer.com/motion/) - Animation library
+- [Vite](https://vitejs.dev/) - Build tool
+- [Tailwind CSS](https://tailwindcss.com/) - Styling
+- [Framer Motion](https://www.framer.com/motion/) - UI animations
 
-## How the Point Cloud Portrait Works
+## Technical Implementation Details
 
-The portrait effect uses a technique called "point cloud visualization" where:
+### Point Cloud Generation (Pre-processed)
 
-1. Your portrait image is converted into thousands of colored points
-2. Each point has position, color, and size attributes
-3. Points respond to mouse movement with a scattering effect
-4. Subtle animations create organic movement:
-   - Points gently pulse in size
-   - Random noise creates slight position variations
-   - Hover interactions cause points to scatter outward
+- One-time image processing to extract color and position data
+- Point sampling algorithm for optimal distribution
+- Efficient point buffer initialization using TypedArrays
+- GPU-accelerated rendering with Three.js PointsMaterial
 
-This creates a dynamic, interactive experience similar to the effect on formation.dev.
+### Real-time Interactive Physics System
+
+- Frame-by-frame mouse interaction handling with NDC space conversion
+- Real-time point tracking using Map data structure
+- Per-frame distance calculations for point direction and movement mechanics
+- Optimized point state management to minimize memory allocation
+- Custom easing functions for smooth transitions
+
+### Real-time Animation System
+
+- Frame-rate independent animation timing using requestAnimationFrame
+- Per-frame point position updates using buffer attributes
+- Real-time viewport scaling and responsive adjustments
+
+### Performance Optimizations
+
+- Efficient point data structures using TypedArrays
+- Optimized render loop with minimal object creation
+- Manual chunk splitting react, three.js and app code for better initial loading and caching
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js (v14 or higher)
-- pnpm (or npm/yarn)
+- Node.js (v18 or higher)
+- pnpm
 
 ### Installation
 
-1. Clone the repository
-2. Install dependencies:
-   ```bash
-   pnpm install
-   ```
+```bash
+pnpm install
+```
 
 ### Development
-
-Run the development server:
 
 ```bash
 pnpm dev
@@ -61,43 +70,23 @@ pnpm dev
 
 ### Building for Production
 
-Build the project for production:
-
 ```bash
 pnpm build
 ```
 
-### Preview Production Build
+## Project Structure
 
-Preview the production build:
-
-```bash
-pnpm preview
-```
-
-## Deployment
-
-This site is designed to be deployed on Cloudflare Pages:
-
-1. Push your code to a Git repository (GitHub, GitLab, etc.)
-2. Connect your repository to Cloudflare Pages
-3. Configure the build settings:
-   - Build command: `pnpm build`
-   - Build output directory: `dist`
-4. Deploy!
+- `src/components/Portrait.jsx` - Core point cloud implementation and real-time updates, event listeners
+- `src/hooks/usePointCloud.js` - Initial point cloud generation
+- `src/utils/` - Utility functions for point manipulation
+- `public/` - Static assets including the source image
 
 ## Customization
 
-To customize this profile:
+The system can be customized by adjusting:
 
-1. Replace the portrait image in the `public` directory
-2. Update personal information in `src/App.jsx`
-3. Modify colors in `tailwind.config.js`
-4. Adjust point cloud parameters in the `usePointCloudFromImage` function:
-   - `pointCount`: Number of points (default: 5000)
-   - Scatter effect intensity
-   - Animation speed and range
-
-## License
-
-MIT 
+- `POINT_COUNT` in `usePointCloud.js` - Controls point density
+- Animation parameters in `Portrait.jsx`
+- Physics and point momvement in `PointCloudMovement.js`
+- Mouse interaction sensitivity
+- Color and size variations
