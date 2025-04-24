@@ -1,5 +1,45 @@
 import { generateRandomPosition } from './pointUtils';
 
+// Generate initial positions for all points
+export const generateInitialPositions = count => {
+  const positions = new Float32Array(count * 3);
+  for (let i = 0; i < count; i++) {
+    const pos = generateRandomPosition();
+    positions[i * 3] = pos.x;
+    positions[i * 3 + 1] = pos.y;
+    positions[i * 3 + 2] = pos.z;
+  }
+  return positions;
+};
+
+// Generate initial random colors for all points
+export const generateInitialColors = count => {
+  const colors = new Float32Array(count * 3);
+  for (let i = 0; i < count; i++) {
+    let gray = Math.random(); // Single grayscale value
+    if (Math.random() < 0.3) {
+      gray = gray / 2;
+    }
+    colors[i * 3] = gray; // Same gray value for all channels
+    colors[i * 3 + 1] = gray;
+    colors[i * 3 + 2] = gray;
+  }
+  return colors;
+};
+
+// Generate initial sizes for all points
+export const generateInitialSizes = count => {
+  const sizes = new Float32Array(count);
+  for (let i = 0; i < count; i++) {
+    sizes[i] = Math.random() * 0.01 + 0.01;
+  }
+  return sizes;
+};
+
+export const easeOutCubic = x => 1 - Math.pow(1 - x, 3);
+export const calculateAnimationProgress = (elapsedTime, duration) =>
+  Math.min(elapsedTime / duration, 1);
+
 /**
  * Generates a random 2D unit vector direction
  * Returns [x, y] coordinates on the unit circle

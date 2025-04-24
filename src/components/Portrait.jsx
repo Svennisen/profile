@@ -9,8 +9,10 @@ import {
   generateInitialPositions,
   generateInitialColors,
   generateInitialSizes,
-} from '../utils/animationUtils';
+} from '../utils/pointCloudMovement';
 import { mouseToNDC } from '../utils/pointUtils';
+
+import { easeOutCubic, calculateAnimationProgress } from '../utils/pointCloudMovement';
 
 export function Portrait({ imageUrl }) {
   const pointsRef = useRef();
@@ -149,9 +151,6 @@ export function Portrait({ imageUrl }) {
       camera.updateProjectionMatrix();
     }
   }, [size, camera]);
-
-  const easeOutCubic = x => 1 - Math.pow(1 - x, 3);
-  const calculateAnimationProgress = (elapsedTime, duration) => Math.min(elapsedTime / duration, 1);
 
   // Animation loop
   useFrame(state => {
