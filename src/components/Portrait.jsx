@@ -33,10 +33,14 @@ export function Portrait({ imageUrl }) {
   const originalColors = useMemo(() => new Float32Array(POINT_COUNT * 3), [POINT_COUNT]);
   const originalSizes = useMemo(() => new Float32Array(POINT_COUNT), [POINT_COUNT]);
 
-  // TODO Add Larger description area
-  // TODO Add background or better background for text
+  // TODO Fix scroll behavior on mobile
+  // TODO: Create a different responsive bio section for mobile that
+  // - Has smaller text
+  // - Has a fixed height and potentially expandable on click,
+  // TODO Lets clean up the Bio to sound a bit more professional
+  // TODO Clean up the code in general
   // TODO Add separate blog post section
-  // TODO Maybe animate my name or logo or text as points as well
+  // TODO Add a projects section
 
   // Pre-calculate random directions for consistent scatter behavior
   const randomDirections = useMemo(() => {
@@ -97,15 +101,37 @@ export function Portrait({ imageUrl }) {
     };
 
     const handleTouch = event => {
+      // Only handle touch events if they're within the canvas bounds
       const rect = event.currentTarget.getBoundingClientRect();
       const touch = event.touches[0];
+
+      // Check if touch is within canvas bounds
+      if (
+        touch.clientX < rect.left ||
+        touch.clientX > rect.right ||
+        touch.clientY < rect.top ||
+        touch.clientY > rect.bottom
+      ) {
+        return;
+      }
+
       const mousePos_NDC = mouseToNDC(touch.clientX, touch.clientY, rect.width, rect.height);
       setMousePosition_NDC(mousePos_NDC);
     };
 
-    // Prevent default only on touchstart
+    // Only prevent default if the touch started within the canvas
     const preventDefaultTouch = e => {
-      e.preventDefault();
+      const rect = e.currentTarget.getBoundingClientRect();
+      const touch = e.touches[0];
+
+      if (
+        touch.clientX >= rect.left &&
+        touch.clientX <= rect.right &&
+        touch.clientY >= rect.top &&
+        touch.clientY <= rect.bottom
+      ) {
+        e.preventDefault();
+      }
     };
 
     const canvas = document.querySelector('canvas');
@@ -113,15 +139,14 @@ export function Portrait({ imageUrl }) {
       // Mouse events
       canvas.addEventListener('mousemove', handleMouseMove);
 
-      // Touch events - note the passive option
+      // Touch events with passive option for better scroll performance
       canvas.addEventListener('touchmove', handleTouch, { passive: true });
       canvas.addEventListener('touchstart', handleTouch, { passive: true });
 
-      // Only prevent default on the canvas element itself
+      // Only prevent default when touch starts within canvas
       canvas.addEventListener('touchstart', preventDefaultTouch, { passive: false });
 
       return () => {
-        // Clean up
         canvas.removeEventListener('mousemove', handleMouseMove);
         canvas.removeEventListener('touchmove', handleTouch);
         canvas.removeEventListener('touchstart', handleTouch);
