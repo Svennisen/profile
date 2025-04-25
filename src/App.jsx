@@ -29,7 +29,7 @@ function Scene() {
 
 function App() {
   return (
-    <div className="relative w-full min-h-screen bg-black overflow-x-hidden">
+    <div className="app-container">
       {/* Canvas container with full width and height */}
       <div className="fixed inset-0 canvas-container">
         <Canvas className="absolute inset-0">
@@ -38,57 +38,65 @@ function App() {
       </div>
 
       {/* Content container with scrollable bio */}
-      <div className="relative z-10 p-4 sm:p-8 max-w-2xl mx-auto sm:mx-0 content-container">
+      <div className="content-container">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
-          className="space-y-8 pt-16"
+          className="main-content"
         >
           <Bio />
+        </motion.div>
 
-          {/* Fixed position links */}
-          <div className="fixed left-0 right-0 bottom-32 p-4 sm:p-8 pointer-events-auto">
-            <div className="flex flex-col sm:flex-row gap-4 links-container justify-center sm:justify-start max-w-2xl mx-auto sm:mx-0">
-              <motion.a
-                href="https://linkedin.com/in/sven-elfgren"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full text-white border border-white/20 transition-all duration-300 flex items-center justify-center gap-2"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+        {/* Fixed position links */}
+        <motion.div
+          className="links-wrapper bottom-8 sm:bottom-32"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
+          <div className="links-grid">
+            <motion.a
+              href="https://linkedin.com/in/sven-elfgren"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link-button link-button-primary"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <span>LinkedIn</span>
+              <svg
+                className="w-3 h-3 sm:w-4 sm:h-4"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
               >
-                <span>LinkedIn</span>
-                <svg
-                  className="w-3 h-3 sm:w-4 sm:h-4"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-                </svg>
-              </motion.a>
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+              </svg>
+            </motion.a>
 
-              <motion.a
-                href="#"
-                className="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-white/5 hover:bg-white/10 backdrop-blur-sm rounded-full text-white/50 border border-white/10 transition-all duration-300 flex items-center justify-center gap-2 cursor-not-allowed"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <span>Coaching Profile</span>
-                <span className="text-xs text-white/30">(Coming Soon)</span>
-              </motion.a>
-            </div>
+            <motion.a
+              href="#"
+              className="link-button link-button-disabled"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <span>Coaching Profile</span>
+              <span className="text-xs text-white/30">(Coming Soon)</span>
+            </motion.a>
           </div>
         </motion.div>
       </div>
 
       {/* GitHub link in bottom right */}
       <motion.a
-        href="https://github.com/svenelfgren/profile"
+        href="https://github.com/Svennisen/profile"
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-4 right-4 z-20 text-white/40 hover:text-white/60 text-sm backdrop-blur-sm bg-black/20 px-3 py-1.5 rounded-full border border-white/10 transition-all duration-300"
+        className="github-link"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.4 }}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
       >

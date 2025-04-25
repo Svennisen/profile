@@ -57,4 +57,38 @@ body {
   .bio-button {
     @apply w-full text-center py-2 text-sm text-gray-300 hover:text-white focus:outline-none;
   }
+
+  /* Layout components */
+  .app-container {
+    @apply relative w-full min-h-screen bg-black overflow-x-hidden;
+  }
+
+  .main-content {
+    @apply relative z-10 p-4 sm:p-8 max-w-2xl mx-auto sm:mx-0;
+  }
+
+  /* Link components */
+  .links-wrapper {
+    @apply fixed left-0 right-0 p-4 sm:p-8 pointer-events-auto;
+  }
+
+  .links-grid {
+    @apply flex flex-col sm:flex-row gap-4 justify-center sm:justify-start max-w-2xl mx-auto sm:mx-0;
+  }
+
+  .link-button {
+    @apply px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base backdrop-blur-sm rounded-full border transition-all duration-300 flex items-center justify-center gap-2;
+  }
+
+  .link-button-primary {
+    @apply bg-white/10 hover:bg-white/20 text-white border-white/20;
+  }
+
+  .link-button-disabled {
+    @apply bg-white/5 hover:bg-white/10 text-white/50 border-white/10 cursor-not-allowed;
+  }
+
+  .github-link {
+    @apply fixed bottom-2 right-2 z-20 text-xs text-white/20 hover:text-white/40 backdrop-blur-sm bg-black/10 px-2 py-1 rounded-full border border-white/5 transition-all duration-300;
+  }
 }

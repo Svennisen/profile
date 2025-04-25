@@ -2,7 +2,9 @@
 
 A technical exploration of interactive 3D graphics using React and Three.js, featuring a dynamic point cloud portrait that responds to user interaction.
 
-## Technical Overview
+It also happens to contain my bio..
+
+## Overview
 
 This project implements a point cloud visualization system with real-time interaction that:
 

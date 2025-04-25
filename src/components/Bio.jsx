@@ -3,14 +3,6 @@ import React, { useState, useEffect } from 'react';
 export function Bio() {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  useEffect(() => {
-    if (isExpanded) {
-      window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
-    } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }, [isExpanded]);
-
   return (
     <div className="bio-container">
       <div
