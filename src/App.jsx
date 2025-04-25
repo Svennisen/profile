@@ -78,7 +78,7 @@ function App() {
             <motion.a
               onClick={e => {
                 e.preventDefault();
-                const email = atob('c3Zlbi5lbGZncmVuQGdtYWlsLmNvbQ==');
+                const email = atob('aGlAc3Zlbi5lbmdpbmVlcmluZw==');
                 window.open(`mailto:${email}`, '_blank');
               }}
               href="#"
