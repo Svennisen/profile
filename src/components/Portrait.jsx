@@ -33,10 +33,6 @@ export function Portrait({ imageUrl }) {
   const originalColors = useMemo(() => new Float32Array(POINT_COUNT * 3), [POINT_COUNT]);
   const originalSizes = useMemo(() => new Float32Array(POINT_COUNT), [POINT_COUNT]);
 
-  // TODO Fix scroll behavior on mobile
-  // TODO: Create a different responsive bio section for mobile that
-  // - Has smaller text
-  // - Has a fixed height and potentially expandable on click,
   // TODO Lets clean up the Bio to sound a bit more professional
   // TODO Clean up the code in general
   // TODO Add separate blog post section

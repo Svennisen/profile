@@ -6,13 +6,14 @@ export function Bio() {
   return (
     <div className="bio-container">
       <div
-        className={`bio-content ${isExpanded ? 'max-h-[1000px]' : 'max-h-[300px]'} sm:max-h-none`}
+        className={`bio-content ${isExpanded ? 'max-h-[1000px]' : 'max-h-[300px]'} md:max-h-none`}
       >
         <p className="bio-text">
           Hi, I'm Sven Elfgren, a product-driven engineering leader passionate about crafting
           intuitive, user-focused software experiences. With over a decade in the tech industry,
-          I've led teams at companies like Lattice, where I helped scale our engineering
-          organization and deliver impactful products.
+          I've been the first engineering hire at startups, built and led multiple engineering
+          teams, and directed substantial engineering organizations through multiple layers of
+          leadership within rapidly scaling companies.
         </p>
 
         <p className="bio-text">
@@ -31,14 +32,14 @@ export function Bio() {
 
         {/* Gradient overlay for mobile */}
         {!isExpanded && (
-          <div className="sm:hidden">
+          <div className="md:hidden">
             <div className="bio-gradient" />
           </div>
         )}
       </div>
 
       {/* Expand button for mobile */}
-      <div className="sm:hidden mt-2 flex justify-end pointer-events-auto">
+      <div className="md:hidden mt-2 flex justify-end pointer-events-auto">
         <button onClick={() => setIsExpanded(!isExpanded)} className="bio-button w-auto px-4">
           {isExpanded ? 'Show less' : 'Read more'}
         </button>

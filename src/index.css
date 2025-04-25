@@ -69,15 +69,15 @@ body {
 
   /* Link components */
   .links-wrapper {
-    @apply fixed left-0 right-0 p-4 sm:p-8 pointer-events-auto;
+    @apply fixed left-0 right-0 bottom-8 p-4 pointer-events-auto md:static md:p-8;
   }
 
   .links-grid {
-    @apply flex flex-col sm:flex-row gap-4 justify-center sm:justify-start max-w-2xl mx-auto sm:mx-0;
+    @apply flex flex-col gap-4 justify-center max-w-2xl mx-auto md:flex-row md:justify-start md:mx-0;
   }
 
   .link-button {
-    @apply px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base backdrop-blur-sm rounded-full border transition-all duration-300 flex items-center justify-center gap-2;
+    @apply px-4 py-2 text-sm backdrop-blur-sm rounded-full border transition-all duration-300 flex items-center justify-center gap-2 md:px-6 md:py-3 md:text-base;
   }
 
   .link-button-primary {

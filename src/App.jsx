@@ -50,7 +50,7 @@ function App() {
 
         {/* Fixed position links */}
         <motion.div
-          className="links-wrapper bottom-8 sm:bottom-32"
+          className="links-wrapper"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.2 }}
@@ -76,12 +76,35 @@ function App() {
             </motion.a>
 
             <motion.a
+              onClick={e => {
+                e.preventDefault();
+                const email = atob('c3Zlbi5lbGZncmVuQGdtYWlsLmNvbQ==');
+                window.open(`mailto:${email}`, '_blank');
+              }}
+              href="#"
+              className="link-button link-button-primary"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <span>Let's Collaborate</span>
+              <svg
+                className="w-3 h-3 sm:w-4 sm:h-4"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path d="M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67z" />
+                <path d="M22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z" />
+              </svg>
+            </motion.a>
+
+            <motion.a
               href="#"
               className="link-button link-button-disabled"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <span>Coaching Profile</span>
+              <span>Coaching</span>
               <span className="text-xs text-white/30">(Coming Soon)</span>
             </motion.a>
           </div>
