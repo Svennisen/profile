@@ -18,18 +18,13 @@ body {
 }
 
 .content-container {
-  pointer-events: none;
-  min-height: 200vh; /* Allow scrolling on mobile */
+  min-height: calc(100vh + var(--bio-height, 0px) - 100px); /* Viewport height plus bio height */
 }
 
 @media (min-width: 640px) {
   .content-container {
     min-height: 100vh; /* Reset height on desktop */
   }
-}
-
-.links-container {
-  pointer-events: auto;
 }
 
 .canvas-container {
@@ -69,7 +64,7 @@ body {
 
   /* Link components */
   .links-wrapper {
-    @apply fixed left-0 right-0 bottom-8 p-4 pointer-events-auto md:static md:p-8;
+    @apply fixed left-0 right-0 bottom-8 p-4 md:static md:p-8;
   }
 
   .links-grid {

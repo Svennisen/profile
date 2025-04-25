@@ -1,10 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 export function Bio() {
   const [isExpanded, setIsExpanded] = useState(false);
+  const bioRef = useRef(null);
+
+  useEffect(() => {
+    const updateContentHeight = () => {
+      if (bioRef.current) {
+        const height = bioRef.current.getBoundingClientRect().height;
+        console.log('Bio height:', height, 'Expanded:', isExpanded);
+        document.documentElement.style.setProperty('--bio-height', `${height}px`);
+      }
+    };
+
+    // Add a small delay to measure after transition
+    const timeoutId = setTimeout(updateContentHeight, 300);
+
+    window.addEventListener('resize', updateContentHeight);
+    return () => {
+      window.removeEventListener('resize', updateContentHeight);
+      clearTimeout(timeoutId);
+    };
+  }, [isExpanded]); // Re-run when expanded state changes
 
   return (
-    <div className="bio-container">
+    <div className="bio-container" ref={bioRef}>
       <div
         className={`bio-content ${isExpanded ? 'max-h-[1000px]' : 'max-h-[300px]'} md:max-h-none`}
       >
@@ -39,7 +59,7 @@ export function Bio() {
       </div>
 
       {/* Expand button for mobile */}
-      <div className="md:hidden mt-2 flex justify-end pointer-events-auto">
+      <div className="md:hidden mt-2 flex justify-end">
         <button onClick={() => setIsExpanded(!isExpanded)} className="bio-button w-auto px-4">
           {isExpanded ? 'Show less' : 'Read more'}
         </button>

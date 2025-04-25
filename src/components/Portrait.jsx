@@ -33,7 +33,6 @@ export function Portrait({ imageUrl }) {
   const originalColors = useMemo(() => new Float32Array(POINT_COUNT * 3), [POINT_COUNT]);
   const originalSizes = useMemo(() => new Float32Array(POINT_COUNT), [POINT_COUNT]);
 
-  // TODO Lets clean up the Bio to sound a bit more professional
   // TODO Clean up the code in general
   // TODO Add separate blog post section
   // TODO Add a projects section
