@@ -33,6 +33,7 @@ export function Portrait({ imageUrl }) {
   const originalColors = useMemo(() => new Float32Array(POINT_COUNT * 3), [POINT_COUNT]);
   const originalSizes = useMemo(() => new Float32Array(POINT_COUNT), [POINT_COUNT]);
 
+  // TODO only do mouse over event for bio on small screen
   // TODO Clean up the code in general
   // TODO Add separate blog post section
   // TODO Add a projects section
@@ -90,7 +91,9 @@ export function Portrait({ imageUrl }) {
 
     // Separate handlers for mouse and touch
     const handleMouseMove = event => {
-      const rect = event.currentTarget.getBoundingClientRect();
+      console.log('mouse move');
+      const canvas = document.querySelector('canvas');
+      const rect = canvas.getBoundingClientRect();
       const mousePos_NDC = mouseToNDC(event.clientX, event.clientY, rect.width, rect.height);
       setMousePosition_NDC(mousePos_NDC);
     };
@@ -131,8 +134,8 @@ export function Portrait({ imageUrl }) {
 
     const canvas = document.querySelector('canvas');
     if (canvas) {
-      // Mouse events
-      canvas.addEventListener('mousemove', handleMouseMove);
+      // Mouse events - attach to window to catch all movements
+      window.addEventListener('mousemove', handleMouseMove);
 
       // Touch events with passive option for better scroll performance
       canvas.addEventListener('touchmove', handleTouch, { passive: true });
@@ -142,7 +145,7 @@ export function Portrait({ imageUrl }) {
       canvas.addEventListener('touchstart', preventDefaultTouch, { passive: false });
 
       return () => {
-        canvas.removeEventListener('mousemove', handleMouseMove);
+        window.removeEventListener('mousemove', handleMouseMove);
         canvas.removeEventListener('touchmove', handleTouch);
         canvas.removeEventListener('touchstart', handleTouch);
         canvas.removeEventListener('touchstart', preventDefaultTouch);
